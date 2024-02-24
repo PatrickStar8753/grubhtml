@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>GRUB</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
     </head>
     <body>
         <div style="width: 100%; display: flex; justify-content: center; align-items: center; padding: 30px 0;">
@@ -17,6 +18,9 @@
 
         try {
             localStorage.getItem('tabs');
+            if (localStorage.getItem('tabs') == ''){
+localStorage.setItem('tabs', 'Google,https://google.com');
+}
         } catch {
             localStorage.setItem('tabs', 'Google,https://google.com');
         }

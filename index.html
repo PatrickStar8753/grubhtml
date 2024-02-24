@@ -1,0 +1,158 @@
+<html>
+    <head>
+        <title>GRUB</title>
+    </head>
+    <body>
+        <div style="width: 100%; display: flex; justify-content: center; align-items: center; padding: 30px 0;">
+            <span>GNU GRUB  version 1.00-html</span>
+        </div>
+        <div class="box">
+
+        </div>
+    </body>
+    <script>
+        // load and add tabs
+
+        // пример значений: название, ссылка. (name1,link1,name2,link2,...,linkN)
+
+        try {
+            localStorage.getItem('tabs');
+        } catch {
+            localStorage.setItem('tabs', 'Google,https://google.com');
+        }
+
+        var tabs = localStorage.getItem('tabs').split(',');
+        for(let i = 0; i < tabs.length; i+=2){
+            if (i == 0){
+                document.querySelector('.box').insertAdjacentHTML('beforeend', `<p id="${i}" path="${tabs[i+1]}" class="active">${tabs[i]}</p>`)
+            } else {
+                document.querySelector('.box').insertAdjacentHTML('beforeend', `<p id="${i}" path="${tabs[i+1]}">${tabs[i]}</p>`)
+            }
+        }
+        
+        document.querySelector('.box').insertAdjacentHTML('beforeend', `<p id="${tabs.length + 1}" path="edittab">Edit tabs</p>`)
+
+        // control
+        document.querySelectorAll('p').forEach(function(h){
+            h.addEventListener('mouseenter', function(e){document.querySelectorAll('p').forEach(function(heh){heh.classList.remove('active')}); document.getElementById(e.target.id).classList.add('active')});
+            h.addEventListener('click', function(e){if(document.getElementById(e.target.id).getAttribute('path') == "edittab"){edittab()} else {window.location.href = document.getElementById(e.target.id).getAttribute('path');}});
+        });
+
+        var mass = document.querySelectorAll('p');
+
+        document.addEventListener('keydown', function(e){
+            switch(e.key){
+                case 'ArrowUp':
+                    for(let i = 0; i <= mass.length; i++){
+                        if (document.querySelectorAll('p')[i].classList.contains('active')){
+                            if(i == 0){
+                                break;
+                            }
+                            document.querySelectorAll('p').forEach(function(heh){heh.classList.remove('active')});
+                            document.querySelectorAll('p')[i-1].classList.add('active');
+                            break;
+                        }
+                    }
+                break;
+                case 'ArrowDown':
+                for(let i = 0; i <= mass.length; i++){
+                        if (document.querySelectorAll('p')[i].classList.contains('active')){
+                            if(i == mass.length - 1){
+                                break;
+                            }
+                            document.querySelectorAll('p').forEach(function(heh){heh.classList.remove('active')});
+                            document.querySelectorAll('p')[i+1].classList.add('active');
+                            break;
+                        }
+                    }
+                break;
+                case 'Enter':
+                    for(let i = 0; i <= mass.length; i++){
+                            if (document.querySelectorAll('p')[i].classList.contains('active')){
+                                if (document.querySelectorAll('p')[i].getAttribute('path') == 'edittab'){
+                                    edittab()
+                                } else {
+                                    window.location.href = document.querySelectorAll('p')[i].getAttribute('path');
+                                }
+                            }
+                        }
+                break;
+                default:
+                    if(e.ctrlKey && e.key == 'q'){
+                        exittab();
+                    }
+                break;
+            }
+        })
+
+        // functions
+    function edittab(){
+        document.querySelector('body').insertAdjacentHTML('afterbegin', `<div class="edittab"><p>Edit tabs:</p><p>Example: Google,https://google.com,Youtube,https://youtube.com</p><p onclick="exittab()" style="cursor: pointer;">Press Ctrl + Q to save and exit.</p><br /><div style="display: flex;"><p style="white-space: pre">> </p><input id="input" style="font-size: 17px;" placeholder="name1,url1,name2,url2,..."></div></div>`);
+        document.getElementById('input').value = localStorage.getItem('tabs');
+    }
+
+    function exittab(){
+        localStorage.setItem('tabs', document.getElementById('input').value);
+        window.location.reload()
+    }
+
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: rgb(0, 0, 0);
+            color: white;
+            font-family: 'consolas', monospace;
+        }
+
+        span {
+            text-align: center;
+        }
+        
+        .box p {
+            margin: 2px;
+            cursor: default;
+        }
+
+        .box {
+            width: calc(100% - 64px);
+            height: calc(100% - 139px);
+            display: block;
+            margin: 0 30px;
+            border: 2px solid rgb(160, 160, 160);
+        }
+
+        .active {
+            background-color: rgb(160, 160, 160);
+            color: black;
+        }
+
+        .edittab {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            background-color: black;
+            width: 100%;
+            height: 100%;
+        }
+
+        .edittab input {
+            background-color: black;
+            color: white;
+            font-family: 'consolas', monospace;
+            border: 0;
+            outline: 0;
+            display: block;
+            width: 100%;
+        }
+
+        .edittab input:focus {
+            outline: 0;
+        }
+    </style>
+</html>
